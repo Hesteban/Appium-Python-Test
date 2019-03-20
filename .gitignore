@@ -1,0 +1,13 @@
+*.log
+*.yml
+*.cfg
+*.xml
+*.iml
+*.pyc
+.idea
+.idea\
+*.log*
+*.pytest_cache
+*.css
+*.html
+*.json
