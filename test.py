@@ -21,7 +21,7 @@ class AppiumTest(unittest.TestCase):
         cls.desired_caps['platformName'] = 'Android'
         cls.desired_caps['platformVersion'] = '8.1'
         cls.desired_caps['automationName'] = 'uiautomator2'
-        cls.desired_caps['deviceName'] = 'Nexux_5_2'
+        cls.desired_caps['deviceName'] = 'Nexus_5_2'
         cls.desired_caps['app'] = cls.apk_path
 
     @classmethod
@@ -30,10 +30,11 @@ class AppiumTest(unittest.TestCase):
         self.driver = webdriver.Remote('http://localhost:4723/wd/hub', self.desired_caps)
         self.driver.implicitly_wait(10)
 
-    '''def test_01_locate_elements_basic(self):
+    def test_01_locate_elements_basic(self):
         print("\n test")
         #acc_button = self.driver.find_element_by_name('Accessibility')
-        acc_button = self.driver.find_element_by_xpath("//android.widget.TextView[@text='Preference']")
+        #acc_button = self.driver.find_element_by_xpath("//android.widget.TextView[@text='Preference']")
+        acc_button = self.driver.find_element_by_accessibility_id("Preference")
         #print(acc_button)
         acc_button.click()
         pref_button = self.driver.find_element_by_xpath("//android.widget.TextView[@text='3. Preference dependencies']")
@@ -43,7 +44,7 @@ class AppiumTest(unittest.TestCase):
         self.driver.find_element_by_class_name("android.widget.EditText").send_keys("123dqw!!!")
         self.driver.find_element_by_id('android:id/button1').click()
     
-
+    '''
     def test_02_locate_elements_uiautomator(self):
         print("\n test 2")
         #acc_button = self.driver.find_element_by_name('Accessibility')
@@ -96,12 +97,42 @@ class AppiumTest(unittest.TestCase):
 
         self.assertTupleEqual(('9','45'),(hour_elem.text,min_elem.text))
 
-    '''
-
     def test_05_locate_elements_uiautomator_UiScrollable(self):
         print("\n test 2")
         # acc_button = self.driver.find_element_by_name('Accessibility')
         views_button = self.driver.find_element_by_android_uiautomator('new UiSelector().text("Views")')
         views_button.click()
-
+ 
         self.driver.find_element_by_android_uiautomator('new UiScrollable(new UiSelector()).scrollIntoView(text("WebView"))')
+        view_elem = self.driver.find_element_by_xpath("//android.widget.TextView[@text='WebView']")
+
+        self.assertTrue(view_elem.is_displayed())
+    
+
+    def test_06_touch_actions_drag_drop(self):
+        print("\n test 2")
+        action = TouchAction(self.driver)
+        views_elem = self.driver.find_element_by_xpath("//android.widget.TextView[@text='Views']")
+        views_elem.click()
+        drag_drop_elem = self.driver.find_element_by_xpath("//android.widget.TextView[@text='Drag and Drop']")
+        # exp_list_elem.click()
+        action.tap(drag_drop_elem).perform()
+
+        origen_elem= self.driver.find_element_by_id("io.appium.android.apis:id/drag_dot_1")
+        destiny_elem = self.driver.find_element_by_id("io.appium.android.apis:id/drag_dot_2")
+
+        action.long_press(origen_elem).move_to(destiny_elem).release().perform()
+    
+    '''
+
+    def test_07_misc_things(self):
+        print("\n test 7")
+        print(self.driver.current_activity)
+        print(self.driver.current_context)
+        print(self.driver.is_locked())
+        views_elem = self.driver.find_element_by_xpath("//android.widget.TextView[@text='Views']")
+        views_elem.click()
+        time.sleep(2)
+        self.driver.press_keycode(4)
+
+
